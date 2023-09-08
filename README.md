@@ -82,4 +82,90 @@ Generative AI-Driven Intelligent Apps Development
      ```
       sudo apt install virtualenv virtualenvwrapper
      ```
+   * Update .bashrc file by adding these lines:
    
+      <img width="542" alt="Screenshot 2023-09-07 at 4 03 24 PM" src="https://github.com/RuichenCN/Generative-AI/assets/113652310/3ae90c3e-11bd-4f86-94a3-8bc77a3bf3ec">
+
+    * Save the file and configure the update:
+
+     ```
+      source ~/.bashrc
+     ```
+   * Create a virtual environment：
+     ```
+      mkvirtualenv CS589
+     ```
+   * Deactivate and activate the virtual environment
+
+     ```
+      deactivate
+     ```
+     ```
+      workon CS589
+     ```
+
+2. Get OpenAI API keys
+
+   [Sign up an account](https://openai.com/product) and create a new secret key under API Keys menu item.
+   
+    <img width="1436" alt="Screenshot 2023-09-07 at 4 17 47 PM" src="https://github.com/RuichenCN/Generative-AI/assets/113652310/e8edac1e-8a20-4c75-86cd-569c3364c934">
+
+3. Installing the Official Python Bindings:
+     ```
+      workon CS589
+     ```
+     ```
+      pip install openai
+     ```
+4. Testing our API Keys:
+
+   * Create a .env file to store our API Key and organization id
+
+     ```
+      nano .env
+     ```
+     Type your api key and org id into the file.
+     You can find org id [here](https://platform.openai.com/account/org-settings)
+
+  * Test authorization
+     ```
+      source .env
+     ```
+     ```
+      curl https://api.openai.com/v1/models -H 'Authorization: Bearer '$API_KEY'' -H 'OpenAIOrganization: '$ORG_ID''
+     ```
+     <img width="486" alt="Screenshot 2023-09-07 at 4 44 13 PM" src="https://github.com/RuichenCN/Generative-AI/assets/113652310/c8eaa1dc-4e97-47b4-866e-c7b84f0cacb8">
+  * Test API using Python code
+     ```
+      nano test-env.py
+     ```
+     ```
+      import os
+      import openai
+      
+      def init_api():
+          with open(".env") as env:
+              for line in env:
+                 key, value = line.strip().split("=")
+                 os.environ[key] = value
+      
+           openai.api_key = os.environ.get("API_KEY")
+           openai.organization = os.environ.get("ORG_ID")
+      
+      init_api()
+      
+      models = openai.Model.list()
+      print(models)
+     ```
+
+     Run python file to test
+     ```
+      python3 test-env.py
+     ```
+     <img width="459" alt="Screenshot 2023-09-07 at 5 47 20 PM" src="https://github.com/RuichenCN/Generative-AI/assets/113652310/a25954ea-9012-4588-90d1-e0858e3ff99d">
+
+
+# Reference
+[Yixin Cao](https://hc.labnet.sfbu.edu/~henry/sfbu/course/generative_ai/Preparing_the_Development_Environment/hw/2023_fall/CS589_HW1_Yixin_Cao_19536_for_window.pdf)
+[Elly Zhu](https://hc.labnet.sfbu.edu/~henry/sfbu/course/generative_ai/Preparing_the_Development_Environment/hw/2023_fall/cs589_hw1_19785_ellyyijun_zhu_ubuntu_on_mac.pdf)
+    
