@@ -229,6 +229,7 @@ pip install openai
 4 EOF
 ```
 Notes: Before executing the above command, make sure to update the API_KEY and ORG_ID variables by their respective values.
+
 2. Now you can execute the following command:
 ```
 1 source .env
@@ -237,7 +238,24 @@ Notes: Before executing the above command, make sure to update the API_KEY and O
 4 -H 'OpenAI-Organization: '$ORG_ID''
 ```
 The curl command should give you the list of models provided by the API like “davinci”, “ada” and many others.
+
 3. To test the API using a Python code, we can execute the following code:
 ```
-s`
+1 import os
+2 import openai
+3
+4 def init_api():
+5     with open(".env") as env:
+6         for line in env:
+7             key, value = line.strip().split("=")
+8             os.environ[key] = value
+9
+10     openai.api_key = os.environ.get("API_KEY")
+11     openai.organization = os.environ.get("ORG_ID")
+12
+13 init_api()
+14
+15 models = openai.Model.list()
+16 print(models)
 ```
+Save this code in the test-api.py
