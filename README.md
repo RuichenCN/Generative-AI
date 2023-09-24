@@ -1,13 +1,14 @@
 # Generative-AI
 Generative AI-Driven Intelligent Apps Development
 
-# Development Environment Setup
+# Development Environment Setup(With Ubuntu)
 * My System Info:  
   MacBook Air M1 2020  
   Mac OS 13.4    
   Memory 8GB
 
 ## Step1: Install Ubuntu
+💡This step is optional for a Mac user.
 1. Download Ubuntu Server for ARM
 
    [Link](https://ubuntu.com/download/server/arm)
@@ -164,8 +165,47 @@ Generative AI-Driven Intelligent Apps Development
      ```
      <img width="459" alt="Screenshot 2023-09-07 at 5 47 20 PM" src="https://github.com/RuichenCN/Generative-AI/assets/113652310/a25954ea-9012-4588-90d1-e0858e3ff99d">
 
+# Development Environment Setup(Without Ubuntu)
+## Step1: Installing Python, pip, and a Virtual Environment for Development
+1. Install Python from [python.org](https://www.python.org/downloads/)
 
-# Reference
-[Yixin Cao](https://hc.labnet.sfbu.edu/~henry/sfbu/course/generative_ai/Preparing_the_Development_Environment/hw/2023_fall/CS589_HW1_Yixin_Cao_19536_for_window.pdf)
-[Elly Zhu](https://hc.labnet.sfbu.edu/~henry/sfbu/course/generative_ai/Preparing_the_Development_Environment/hw/2023_fall/cs589_hw1_19785_ellyyijun_zhu_ubuntu_on_mac.pdf)
-    
+   My python version: 3.10.7
+
+2. Install pip, the Python package installer
+
+   ```
+   python get-pip.py
+   ```
+
+3. Using virtualenvwrapper
+
+   ```
+   pip install virtualenvwrapper
+   ```
+
+4. configure virtualenvwrapper
+
+   ```
+   nano ~/.zshrc
+   ```
+   ```
+   export WORKON_HOME=$HOME/.virtualenvs
+   export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
+   source /usr/local/bin/virtualenvwrapper.sh
+   ```
+   Change the paths according to your own paths. Then save and exist.
+   ```
+   source ~/.zshrc
+   ```
+5. Creating a Virtual Environment
+   ```
+   mkvirtualenv myenv
+   ```
+6. Activating the Virtual Environment
+   ```
+   workon myenv
+   ```
+7. Existing the Virtual Environment
+   ```
+   deactivate
+   ```
