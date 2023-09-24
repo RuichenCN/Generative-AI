@@ -214,3 +214,30 @@ Generative AI-Driven Intelligent Apps Development
 2. Follow the instructions to create an account
 3. Create your API keys at [this](beta.openai.com/account/api-keys)
 4. Save the generated secret key securely
+## Step3: Installing the Official Python Bindings
+To install the official Python bindings, run the following command:
+```
+pip install openai
+```
+💡 Make sure you’re installing the library in the virtual environment we created earlier.
+## Step4: Testing our API Keys
+1. In order to verify that everything works correctly, we are going to execute a curl call. Let’s store the API key and the organization id in a .env file before:
+```
+1 cat << EOF > .env
+2 API_KEY=xxx
+3 ORG_ID=xxx
+4 EOF
+```
+Notes: Before executing the above command, make sure to update the API_KEY and ORG_ID variables by their respective values.
+2. Now you can execute the following command:
+```
+1 source .env
+2 curl https://api.openai.com/v1/models \
+3 -H 'Authorization: Bearer '$API_KEY'' \
+4 -H 'OpenAI-Organization: '$ORG_ID''
+```
+The curl command should give you the list of models provided by the API like “davinci”, “ada” and many others.
+3. To test the API using a Python code, we can execute the following code:
+```
+s`
+```
