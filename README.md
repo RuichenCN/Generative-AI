@@ -209,3 +209,8 @@ Generative AI-Driven Intelligent Apps Development
    ```
    deactivate
    ```
+## Step2: Get Your OpenAI API Keys
+1. Go to [Openai](openai.com/api/) and create an account.
+2. Follow the instructions to create an account
+3. Create your API keys at [this](beta.openai.com/account/api-keys)
+4. Save the generated secret key securely
