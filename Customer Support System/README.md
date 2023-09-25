@@ -69,5 +69,6 @@ Download "api_key.txt" and put your api key in this txt.
 
 The result:
 
-<img width="1440" alt="Screenshot 2023-09-24 at 5 23 26 PM" src="https://github.com/RuichenCN/Generative-AI/assets/113652310/2c87d334-10e6-4d9a-881b-c525e9335522">
+<img width="1440" alt="Screenshot 2023-09-24 at 6 04 43 PM" src="https://github.com/RuichenCN/Generative-AI/assets/113652310/416a8c21-9b67-4c38-bd74-d75a10dd67ae">
+
 
