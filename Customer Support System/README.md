@@ -1,5 +1,5 @@
 # Web-based Solution (Python Flask webserver)
-## Use Python to create a web-based interface to ChatGPT
+## 1. Use Python to create a web-based interface to ChatGPT
 #### Step1. Download the ChatGPT sample code by cloning this repository
 1. Creating the working directory
 ```
@@ -46,6 +46,28 @@ The result:
 <img width="1438" alt="Screenshot 2023-09-24 at 4 08 29 PM" src="https://github.com/RuichenCN/Generative-AI/assets/113652310/c50490a3-9efc-4447-b2ec-7c66c3ea37e3">
 
 
-## Integrate the Python code to a create a web-based interface
+## 2. Integrate the Python code to a create a web-based interface
 Target: to let the users ask ChatGPT questions about the website using a browser.
+
+1. Install Flask
+```
+pip install Flask
+```
+2. Create a python script
+
+Download my code in web-flask.py.
+
+3. Download the file "templates"
+
+It contains two html files: index.html and result.html
+
+4. Add your api key
+
+Download "api_key.txt" and put your api key in this txt.
+
+5. Implement the web-flask.py
+
+The result:
+
+<img width="1440" alt="Screenshot 2023-09-24 at 5 23 26 PM" src="https://github.com/RuichenCN/Generative-AI/assets/113652310/2c87d334-10e6-4d9a-881b-c525e9335522">
 
