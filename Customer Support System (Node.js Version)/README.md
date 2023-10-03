@@ -42,6 +42,7 @@
 
 ## Step2: Integrate the Javascript (Node.js) code
 🎯 Target: Create a web-based interface to let the users ask ChatGPT questions about the website using a browser.
+
 Put this file into the same directory with web-flask.py
 app.js:
 ```
