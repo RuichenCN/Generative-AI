@@ -82,4 +82,5 @@ Then run the code use this command:
 ```
 node app.js
 ```
-<img width="902" alt="Screenshot 2023-10-03 at 4 52 58 PM" src="https://github.com/RuichenCN/Generative-AI/assets/113652310/65714dd1-4f68-42ee-9421-1850d343f4fc">
+<img width="1440" alt="Screenshot 2023-10-07 at 12 21 14 PM" src="https://github.com/RuichenCN/Generative-AI/assets/113652310/a6b94f03-9fd6-412a-a638-8ddb679e5f57">
+
