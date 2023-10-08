@@ -1,6 +1,8 @@
 # Customer Support System: An email to the customer
 🎯 Goal: Automatically generate an email and send it to the customer according to the comment from the customer
 
+[Google Slides](https://docs.google.com/presentation/d/1mx5q2DQ9Y7fj41LczW_PLVqfmRXd0qtk_8u34a3hW4c/edit?usp=sharing)
+
 ## Step1: Generate a customer's comment using ChatGpt
 ```
 class Product:
