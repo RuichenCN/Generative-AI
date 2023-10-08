@@ -179,4 +179,6 @@ You can see this in your Terminal:
 
 Use the address displayed on your terminal like "https://252d-146-74-94-66.ngrok-free.app" to access the website.
 
+<img width="1440" alt="Screenshot 2023-10-08 at 3 23 38 PM" src="https://github.com/RuichenCN/Generative-AI/assets/113652310/a1b1e36f-086b-4e47-b2d1-73b217eb13ac">
+
 End
