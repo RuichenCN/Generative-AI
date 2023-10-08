@@ -139,3 +139,44 @@ Test case3: Chinese -> English
 Test case4: Chinese -> Chinese
 
 <img width="1440" alt="Screenshot 2023-10-08 at 1 48 38 PM" src="https://github.com/RuichenCN/Generative-AI/assets/113652310/af895402-0e3a-47b2-b0e7-66fa3ad63290">
+
+
+## Step3: NGRok
+1. Install NGRok
+
+```
+brew install ngrok/ngrok/ngrok
+```
+2. Create your NGRok free account
+
+Click [here](https://dashboard.ngrok.com/get-started/setup) to create a free account
+
+3. Get your authtoken
+
+After signning up, you can get your authtoken [here](https://dashboard.ngrok.com/get-started/setup)
+4. Add your authtoken
+
+```
+ngrok config add-authtoken <token>
+```
+⚠️ replace the <token> with your own authtoken
+5. Run NGRok
+
+Notes: In this step, if you are a MacOS user, your default flask port is 5000. Please change it to another port like 8000. You can use this way:
+```
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8000, debug=True)
+```
+Then run your NGRok:
+```
+ngrok http 8000
+```
+You can see this in your Terminal:
+
+<img width="564" alt="Screenshot 2023-10-08 at 3 33 53 PM" src="https://github.com/RuichenCN/Generative-AI/assets/113652310/4b7913f3-e2a4-405a-bcdc-d4b59c66648f">
+
+6. Access the website
+
+Use the address displayed on your terminal like "https://252d-146-74-94-66.ngrok-free.app" to access the website.
+
+End
