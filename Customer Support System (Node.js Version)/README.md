@@ -1,4 +1,6 @@
 # Customer Support System (Node.js Version)
+# Presentation
+[Google slides](https://docs.google.com/presentation/d/1mEdCqU8IGOmYsvJl7MO6rHwA6p0kmjAOyxgJ4cFJrLo/edit?usp=sharing)
 ## Step1: Create a web-based interface to ChatGPT using Javascript/Node.js
 1. Install Node.js in your system
 2. Download the ChatGPT sample code by cloning this repository
