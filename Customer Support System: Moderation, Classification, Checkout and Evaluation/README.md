@@ -1,7 +1,7 @@
 # Customer Support System: Moderation, Classification, Checkout and Evaluation
 Moderation, Classification, Checkout and Evaluation of the previous Customer Support System
 # Presentation
-[Google Slides]()
+[Google Slides](https://docs.google.com/presentation/d/1GZH8agNQpuB_rdAlf-93pw2kcswk5t122Gv8hCeSlvk/edit#slide=id.g25f6af9dd6_0_0)
 ## Step1: Checking Input: Input Moderation
 ### Step 1.1: Check inappropriate prompts
 * Input: moderate the generated comment
