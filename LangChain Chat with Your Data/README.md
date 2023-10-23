@@ -80,13 +80,106 @@ The result:
 ## Part2: Vectorstores and Embedding
 Steps: 
 
-1. Load documents  
-2. Split the documents into small, semantically meaningful chunks  
-3. Create an index for each chunk by embeddings  
-4. Store these index in a vector stores for easy retrieval when answering questions  
-5. Search answer of a question.  
-6. Edge Cases - Failure
+1. Load documents    
+    The same steps as the previous part.
+2. Split the documents into small, semantically meaningful chunks   
 
+   ```
+   from langchain.text_splitter import RecursiveCharacterTextSplitter
+   text_splitter = RecursiveCharacterTextSplitter(
+        chunk_size = 1500,
+        chunk_overlap = 150
+    )
+    splits = text_splitter.split_documents(docs)
+   ```
+3. Create an index for each chunk by embeddings  
+    ```
+    from langchain.embeddings.openai import OpenAIEmbeddings
+    embedding = OpenAIEmbeddings()
+    ```
+   
+4. Store these index in a vector stores for easy retrieval when answering questions
+    
+    ```
+    from langchain.vectorstores import Chroma
+    persist_directory = './docs/chroma/'
+    
+    # remove old database files if any
+    # get_ipython().system('rm -rf ./docs/chroma')  
+    
+    vectordb = Chroma.from_documents(
+        documents=splits,
+        embedding=embedding,
+        persist_directory=persist_directory
+    )
+    print(vectordb._collection.count())
+    ```
+5. Search answer of a question.
+
+    ```
+    question = "is there an email i can ask for help"
+    docs = vectordb.similarity_search(question,k=3)
+    print("The original answer: ")
+    print("===================>")
+    print(docs[0].page_content)
+    print("===================>")
+    vectordb.persist()
+    ```
+6. Edge Cases - Failure
+    ```
+    docs_mmr = vectordb.max_marginal_relevance_search(question,k=3)
+    print("The diverse answer1: ")
+    print("===================>")
+    print(docs_mmr[0].page_content)
+    print("===================>")
+    print("The diverse answer2: ")
+    print("===================>")
+    print(docs_mmr[1].page_content)
+    print("===================>")
+    ```
+    ```
+    new_question = "What are the application requirements for the MSCS program at SFBU?"
+    # docs = vectordb.similarity_search(
+    #     question,
+    #     k=3,
+    #     filter={"source":
+    #      "2023Catalog.pdf"}
+    # )
+    from langchain.llms import OpenAI
+    from langchain.retrievers.self_query.base import SelfQueryRetriever
+    from langchain.chains.query_constructor.base import AttributeInfo
+    
+    metadata_field_info = [
+    
+     AttributeInfo(
+       name="source",
+       description="The catalog the chunk is from, should \
+          be `2023Catalog.pdf`",
+       type="string",
+       ),
+    
+     AttributeInfo(
+       name="page",
+       description="The page from the catalog",
+       type="integer",
+     ),
+    
+    ]
+    
+    document_content_description = "Lecture notes"
+    llm = OpenAI(temperature=0)
+    retriever = SelfQueryRetriever.from_llm(
+        llm,
+        vectordb,
+        document_content_description,
+        metadata_field_info,
+        verbose=True
+    )
+    
+    docs = retriever.get_relevant_documents(new_question)
+    for d in docs:
+        print(d.metadata)
+    ```
 
 My question: Is there an email i can ask for help?
 
@@ -94,11 +187,18 @@ The result:
 
 <img width="613" alt="Screenshot 2023-10-22 at 11 32 38 PM" src="https://github.com/RuichenCN/Generative-AI/assets/113652310/17b0f487-f255-4560-8af1-71f90468acd0">
 
+The diverse answer:
+
+<img width="612" alt="Screenshot 2023-10-22 at 11 53 17 PM" src="https://github.com/RuichenCN/Generative-AI/assets/113652310/76071fed-c79f-4a17-960e-01315e97bd18">
+
+<img width="620" alt="Screenshot 2023-10-22 at 11 53 35 PM" src="https://github.com/RuichenCN/Generative-AI/assets/113652310/e82c5acf-a18d-418e-b4f5-ae6894024f92">
+
+
 The metadata:
 
 <img width="301" alt="Screenshot 2023-10-22 at 11 45 32 PM" src="https://github.com/RuichenCN/Generative-AI/assets/113652310/ab8a6dd3-b42f-4515-b353-8d6fd080987a">
 
 The End
 
-The address of this github: 
+The address of this github: https://github.com/RuichenCN/Generative-AI/blob/main/LangChain%20Chat%20with%20Your%20Data/README.md
 
