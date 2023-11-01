@@ -200,5 +200,62 @@ The metadata:
 
 The End
 
-The address of this github: https://github.com/RuichenCN/Generative-AI/blob/main/LangChain%20Chat%20with%20Your%20Data/README.md
+## Part3: Chat
+### Step 1: Overview of the workflow for RAG 
+```
+pip install panel
+```
+```
 
+import os
+import openai
+import panel as pn  # GUI
+pn.extension()
+
+from dotenv import load_dotenv, find_dotenv
+# read local .env file
+_ = load_dotenv(find_dotenv()) 
+
+openai.api_key  = os.environ['OPENAI_API_KEY']
+
+import datetime
+current_date = datetime.datetime.now().date()
+if current_date < datetime.date(2023, 9, 2):
+    llm_name = "gpt-3.5-turbo-0301"
+else:
+    llm_name = "gpt-3.5-turbo"
+print(llm_name)
+```
+### Step 2: Load document and create VectorDB
+```
+from langchain.embeddings.openai import OpenAIEmbeddings
+from langchain.vectorstores import Chroma
+persist_directory = 'docs/chroma/'
+embedding = OpenAIEmbeddings()
+vectordb = Chroma(persist_directory=persist_directory, 
+                  embedding_function=embedding)
+```
+### Step 3: Similarity Search to select relevant chunks (splits)
+```
+question = "What are major topics for this class?"
+docs = vectordb.similarity_search(question,k=3)
+print("The length of docs is ", len(docs))
+```
+### Step 4: Create LLM
+```
+from langchain.chat_models import ChatOpenAI
+llm = ChatOpenAI(model_name=llm_name, temperature=0)
+llm.predict("Hello world!")
+```
+### Step 5: ConversationalRetrievalChain
+```
+from langchain.memory import ConversationBufferMemory
+
+memory = ConversationBufferMemory(
+    memory_key="chat_history",
+    # Set return messages equal true
+    # - Return the chat history as a  list of messages 
+    #   as opposed to a single string. 
+    return_messages=True
+) 
+```
