@@ -248,6 +248,7 @@ llm = ChatOpenAI(model_name=llm_name, temperature=0)
 llm.predict("Hello world!")
 ```
 ### Step 5: ConversationalRetrievalChain
+#### Step 5.1: Create Memory 
 ```
 from langchain.memory import ConversationBufferMemory
 
@@ -258,4 +259,270 @@ memory = ConversationBufferMemory(
     #   as opposed to a single string. 
     return_messages=True
 ) 
+```
+
+#### Step 5.2: QA with Conversational Retrieval Chain
+```
+from langchain.chains import ConversationalRetrievalChain
+
+retriever=vectordb.as_retriever()
+qa = ConversationalRetrievalChain.from_llm(
+    llm,
+    retriever=retriever,
+    memory=memory
+)
+```
+#### Step 5.3: Test ConversationalRetrievalChain
+##### Step 5.3.1: First Question
+```
+question = "Is probability a class topic?"
+result = qa({"question": question})
+print("The answer of first question is", result['answer'])
+```
+##### Step 5.3.2: Follow-up Question
+```
+question = "why are those prerequesites needed?"
+result = qa({"question": question})
+print("The answer of follow-up question is", result['answer'])
+```
+### Step 6: Create a chatbot that works on your documents
+```
+from langchain.text_splitter import CharacterTextSplitter, RecursiveCharacterTextSplitter
+from langchain.vectorstores import DocArrayInMemorySearch
+from langchain.document_loaders import TextLoader
+from langchain.document_loaders import PyPDFLoader
+```
+#### Step 6.1: Create a chatbot that works on your documents ---- Create Business Logic
+```
+def load_db(file, chain_type, k):
+    # load documents
+    loader = PyPDFLoader(file)
+    documents = loader.load()
+    # split documents
+    text_splitter = RecursiveCharacterTextSplitter(
+           chunk_size=1000, 
+           chunk_overlap=150)
+    docs1 = text_splitter.split_documents(documents)
+    # define embedding
+    embeddings = OpenAIEmbeddings()
+    # create vector database from data
+    db = DocArrayInMemorySearch.from_documents(docs1, 
+           embeddings)
+    # define retriever
+    retriever = db.as_retriever(search_type="similarity", 
+           search_kwargs={"k": k})
+    # create a chatbot chain. Memory is managed externally.
+    qa = ConversationalRetrievalChain.from_llm(
+        llm=ChatOpenAI(model_name=llm_name, temperature=0), 
+        chain_type=chain_type, 
+        retriever=retriever, 
+        return_source_documents=True,
+        return_generated_question=True,
+    )
+    return qa 
+```
+```
+import param
+class cbfs(param.Parameterized):
+    chat_history = param.List([])
+    answer = param.String("")
+    db_query = param.String("")
+    db_response = param.List([])
+
+    def __init__(self,  **params):
+        super(cbfs, self).__init__( **params)
+        self.panels = []
+        self.loaded_file = "./2023Catalog.pdf"
+        self.qa = load_db(self.loaded_file,"stuff", 4)
+
+    def call_load_db(self, count):
+        # init or no file specified :
+        if count == 0 or file_input.value is None:  
+            return pn.pane.Markdown(f"Loaded File: {self.loaded_file}")
+        else:
+            file_input.save("temp.pdf")  # local copy
+            self.loaded_file = file_input.filename
+            button_load.button_style="outline"
+            self.qa = load_db("temp.pdf", "stuff", 4)
+            button_load.button_style="solid"
+        self.clr_history()
+        return pn.pane.Markdown(
+            f"Loaded File: {self.loaded_file}")
+    
+    def convchain(self, query):
+        if not query:
+            return pn.WidgetBox(pn.Row('User:', 
+               pn.pane.Markdown("", width=600)), scroll=True)
+        result = self.qa({"question": query, 
+                          "chat_history": self.chat_history})
+        self.chat_history.extend([(query, result["answer"])])
+        self.db_query = result["generated_question"]
+        self.db_response = result["source_documents"]
+        self.answer = result['answer'] 
+        self.panels.extend([
+            pn.Row('User:', pn.pane.Markdown(query, width=600)),
+            pn.Row('ChatBot:', pn.pane.Markdown(self.answer, 
+               width=600, 
+               style={'background-color': '#F6F6F6'}))
+        ])
+        inp.value = ''  #clears loading indicator when cleared
+        return pn.WidgetBox(*self.panels,scroll=True)
+    
+    @param.depends('db_query ', )
+    def convchain(self):
+        if not self.db_query :
+            return pn.Column(
+                pn.Row(pn.pane.Markdown(f"Last question to DB:", 
+            styles={'background-color': '#F6F6F6'})),
+                pn.Row(pn.pane.Str("no DB accesses so far"))
+            )
+        return pn.Column(
+            pn.Row(pn.pane.Markdown(f"DB query:", 
+            styles={'background-color': '#F6F6F6'})),
+            pn.pane.Str(self.db_query )
+        )
+    
+    @param.depends('db_response', )
+    def get_sources(self):
+        if not self.db_response:
+            return 
+        rlist=[pn.Row(pn.pane.Markdown(f"Result of DB lookup:", 
+            styles={'background-color': '#F6F6F6'}))]
+        for doc in self.db_response:
+            rlist.append(pn.Row(pn.pane.Str(doc)))
+        return pn.WidgetBox(*rlist, width=600, scroll=True)
+    
+    @param.depends('convchain', 'clr_history') 
+    def get_chats(self):
+        if not self.chat_history:
+            return pn.WidgetBox(
+                  pn.Row(pn.pane.Str("No History Yet")), 
+                   width=600, scroll=True)
+        rlist=[pn.Row(pn.pane.Markdown(
+            f"Current Chat History variable", 
+            styles={'background-color': '#F6F6F6'}))]
+        for exchange in self.chat_history:
+            rlist.append(pn.Row(pn.pane.Str(exchange)))
+        return pn.WidgetBox(*rlist, width=600, scroll=True)
+    
+    def clr_history(self,count=0):
+        self.chat_history = []
+        return 
+```
+#### Step 6.2: Create a web-based user interface
+Front-end:
+```
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>San Francisco Bay University Service Bot</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+      }
+
+      h1 {
+        color: #3498db;
+      }
+
+      form {
+        margin-top: 20px;
+      }
+
+      input[type="text"] {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        width: 70%;
+        font-size: 16px;
+      }
+
+      button[type="submit"] {
+        padding: 10px 20px;
+        background-color: #3498db;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+
+      button[type="submit"]:hover {
+        background-color: #2980b9;
+      }
+
+      h2 {
+        margin-top: 20px;
+        color: #3498db;
+      }
+
+      ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      li {
+        margin: 10px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>San Francisco Bay University Service Bot</h1>
+
+    <form method="POST" action="/submit_question">
+      <input type="text" name="question" placeholder="Ask a question" />
+      <button type="submit">Submit</button>
+    </form>
+
+    <!-- Add a "Start New Chat" button -->
+    <form method="POST" action="/start_new_chat">
+      <button type="submit">Start New Chat</button>
+    </form>
+
+    <div>
+      <h2>Replies:</h2>
+      <ul>
+        {% for question, reply in replies.items() %}
+        <li><strong>{{ question }}</strong>: {{ reply }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </body>
+</html>
+```
+
+Back-end:
+```
+from flask import Flask, render_template, request, redirect, url_for
+from cbfs import cbfs
+
+app = Flask(__name__)
+
+# Sample data for replies (you can replace this with your chatbot logic)
+replies = {}
+c = cbfs()
+
+@app.route('/')
+def index():
+    return render_template('index.html', replies=replies)
+
+@app.route('/submit_question', methods=['POST'])
+def submit_question():
+    question = request.form.get('question')
+    reply = c.convchain(question)  # Replace with your chatbot logic
+    replies[question] = reply
+    return index()
+
+@app.route('/start_new_chat', methods=['POST'])
+def start_new_chat():
+    # Clear the conversation history to start a new chat
+    c.clr_history()
+    replies.clear()
+    return redirect(url_for('index'))
+
+if __name__ == '__main__':
+    app.run(debug=True)
 ```
