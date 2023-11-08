@@ -88,7 +88,6 @@ def transcribe_forever(audio_queue, result_queue, audio_model, english,
                 print("You did not say the wake word.. Ignoring")
 
 # def reply(result_queue):
-#     openai.api_key = "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"
 #     while True:
 #         result = result_queue.get()
 #         data = openai.Completion.create(
