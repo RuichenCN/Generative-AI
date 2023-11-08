@@ -1,4 +1,6 @@
 # LangChain Chat with Your Data
+# Presentation
+[Google Slides](https://docs.google.com/presentation/d/1G1ScJ2P_3Mb1r_MHyrQ3ffaDf-G_6tr56-9vbVJvfsY/edit#slide=id.g25f6af9dd6_0_0)
 ## Part1: Document Loading
 ### Step1: PDF
 [2023 Catalog](https://www.sfbu.edu/sites/default/files/2022-12/2023Catalog.pdf)
