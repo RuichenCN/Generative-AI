@@ -90,9 +90,10 @@ Fine-tune succeeded
 Job complete! Status: succeeded
 ```
 
-Try out your fine-tuned model:
-```
-openai api completions.create -m <MODEL ID> -p <YOUR_PROMPT>
-```
+## Step 6 Testing the Fine-Tuned Model
+Try out your fine-tuned model using "test.py"
+
+<img width="447" alt="Screenshot 2023-11-20 at 7 47 19 PM" src="https://github.com/RuichenCN/Generative-AI/assets/113652310/6581a9fb-d683-49c8-9194-6a87638dc6c5">
+
 
 # End
